@@ -25,3 +25,33 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton.setText(_translate("MainWindow", "Нарисовать круг"))
+
+
+class Example(QMainWindow, Ui_MainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.do_paint = False
+        self.pushButton.clicked.connect(self.paint)
+
+    def paintEvent(self, event):
+        if self.do_paint:
+            qp = QPainter()
+            qp.begin(self)
+            self.draw(qp)
+            qp.end()
+    def paint(self):
+        self.do_paint = True
+        self.repaint()
+
+    def draw(self, qp):
+        size = random.randrange(650)
+        qp.setBrush(Qt.yellow)
+        qp.drawEllipse(10, 10, size, size)
+        self.do_paint = False
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = Example()
+    ex.show()
+    sys.exit(app.exec_())
